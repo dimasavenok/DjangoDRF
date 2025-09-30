@@ -6,7 +6,7 @@ from lms.models import Lesson, Course
 class LessonSerializer(serializers.ModelSerializer):
     class Meta:
         model = Lesson
-        fields = ('id', 'course', 'title', 'description', 'preview', 'video_url', 'order')
+        fields = ('id', 'course', 'title', 'description', 'preview', 'video_url')
         read_only_fields = ('id',)
 
 class CourseSerializer(serializers.ModelSerializer):
