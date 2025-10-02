@@ -9,7 +9,7 @@ class Course(models.Model):
         return f'{self.title}'
 
 class Lesson(models.Model):
-    course = models.ForeignKey(Course, on_delete=models.CASCADE)
+    course = models.ForeignKey(Course, on_delete=models.CASCADE, related_name='lessons')
     title = models.CharField(max_length=255)
     preview = models.ImageField(upload_to='lessons_previews/', blank=True, null=True)
     description = models.TextField(blank=True, null=True)
