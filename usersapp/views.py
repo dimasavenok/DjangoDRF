@@ -4,10 +4,13 @@ from rest_framework import generics, filters
 
 # Create your views here.
 from rest_framework import viewsets
+from rest_framework_simplejwt.views import TokenObtainPairView
+
 from .models import User, Payment
 from .serializers import UserSerializer, PaymentSerializer
 
 
+@extend_schema(tags=["Users"])
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
@@ -19,3 +22,4 @@ class PaymentListView(generics.ListAPIView):
     filter_backends = [SearchFilter, OrderingFilter]
     filterset_fields = ["course", "lesson", "method"]
     ordering_fields = ["date"]
+    search_fields = ["method"]
