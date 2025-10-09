@@ -38,6 +38,8 @@ INSTALLED_APPS = [
 
     'rest_framework',
     'rest_framework_simplejwt',
+    'rest_framework_simplejwt.token_blacklist',
+
     'phonenumber_field',
 
     "drf_spectacular",
@@ -138,8 +140,13 @@ REST_FRAMEWORK = {
 }
 
 SIMPLE_JWT = {
-    'ACCESS_TOKEN_LIFETIME': timedelta(minutes=15),
-    'REFRESH_TOKEN_LIFETIME': timedelta(days=1),
+    "ACCESS_TOKEN_LIFETIME": timedelta(hours=1), # timedelta(minutes=15),  # срок жизни access токена
+    "REFRESH_TOKEN_LIFETIME": timedelta(days=3),     # срок жизни refresh токена
+    "ROTATE_REFRESH_TOKENS": True,                  # обновлять refresh токен при запросе
+    "BLACKLIST_AFTER_ROTATION": True,               # блэклистить старый refresh токен
+    "AUTH_HEADER_TYPES": ("Bearer",),               # формат заголовка: Authorization: Bearer <token>
+    "ALGORITHM": "HS256",
+    "SIGNING_KEY": SECRET_KEY,                      # можно вынести в .env
 }
 
 SPECTACULAR_SETTINGS = {

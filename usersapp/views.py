@@ -1,19 +1,24 @@
 from rest_framework.filters import SearchFilter, OrderingFilter
 from drf_spectacular.utils import extend_schema
-from rest_framework import generics, filters
+from rest_framework import generics, permissions
 
 # Create your views here.
 from rest_framework import viewsets
-from rest_framework_simplejwt.views import TokenObtainPairView
 
 from .models import User, Payment
-from .serializers import UserSerializer, PaymentSerializer
+from .serializers import UserSerializer, PaymentSerializer, UserRegisterSerializer
 
 
 @extend_schema(tags=["Users"])
 class UserViewSet(viewsets.ReadOnlyModelViewSet):
     queryset = User.objects.all()
     serializer_class = UserSerializer
+
+@extend_schema(tags=["Users"])
+class RegisterUserView(generics.CreateAPIView):
+    queryset = User.objects.all()
+    serializer_class = UserRegisterSerializer
+    permission_classes = [permissions.AllowAny]
 
 @extend_schema(tags=["Payments"])
 class PaymentListView(generics.ListAPIView):
