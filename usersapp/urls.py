@@ -8,7 +8,7 @@ from . import views
 
 from rest_framework.routers import DefaultRouter
 
-from .views import PaymentListView, RegisterUserView
+from .views import PaymentListView, RegisterUserView, CreateStripePaymentView
 
 router = DefaultRouter()
 router.register(r'users', views.UserViewSet, basename='user')
@@ -34,4 +34,5 @@ urlpatterns = [
 
 urlpatterns += [
     path("payments/", PaymentListView.as_view(), name="payments-list"),
+    path('payments/create/', CreateStripePaymentView.as_view(), name='create-payment'),
 ]

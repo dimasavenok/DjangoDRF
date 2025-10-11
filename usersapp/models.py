@@ -57,5 +57,12 @@ class Payment(models.Model):
     amount = models.DecimalField(max_digits=10, decimal_places=2)
     method = models.CharField(max_length=20, choices=PAYMENT_METHODS, verbose_name="Способ оплаты")
 
+    # новые поля для Stripe
+    stripe_product_id = models.CharField(max_length=255, blank=True, null=True)
+    stripe_price_id = models.CharField(max_length=255, blank=True, null=True)
+    stripe_session_id = models.CharField(max_length=255, blank=True, null=True)
+    checkout_url = models.URLField(blank=True, null=True)
+    status = models.CharField(max_length=32, default='pending')
+
     def __str__(self):
         return f"{self.user} - {self.amount} ({self.method})"
