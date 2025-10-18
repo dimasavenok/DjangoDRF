@@ -195,3 +195,30 @@ SPECTACULAR_SETTINGS = {
 }
 
 AUTH_USER_MODEL = 'usersapp.User'
+
+
+CELERY_BROKER_URL = os.getenv('REDIS_URL', 'redis://localhost:6379/0')
+CELERY_RESULT_BACKEND = CELERY_BROKER_URL
+
+CELERY_ACCEPT_CONTENT = ['json']
+CELERY_TASK_SERIALIZER = 'json'
+CELERY_RESULT_SERIALIZER = 'json'
+CELERY_TIMEZONE = 'Europe/Moscow'  # или ваш регион
+CELERY_ENABLE_UTC = False
+
+# Celery Beat
+from datetime import timedelta
+CELERY_BEAT_SCHEDULE = {
+    'deactivate_inactive_users': {
+        'task': 'users.tasks.deactivate_inactive_users',
+        'schedule': timedelta(days=1),  # каждый день
+    },
+}
+
+EMAIL_BACKEND = 'django.core.mail.backends.smtp.EmailBackend'
+EMAIL_HOST = 'smtp.gmail.com'
+EMAIL_PORT = 587
+EMAIL_USE_TLS = True
+EMAIL_HOST_USER = 'ваш_email@gmail.com'
+EMAIL_HOST_PASSWORD = 'пароль_или_app_password'
+DEFAULT_FROM_EMAIL = EMAIL_HOST_USER

@@ -1,4 +1,7 @@
+from datetime import timedelta
+
 from django.shortcuts import render
+from django.utils import timezone
 from rest_framework import viewsets, generics, status
 from rest_framework.decorators import action
 from rest_framework.parsers import MultiPartParser, FormParser, JSONParser
@@ -9,7 +12,7 @@ from rest_framework.response import Response
 from lms.models import Course, Lesson, Subscription
 from lms.serializers import CourseSerializer, LessonSerializer
 from usersapp.permissions import IsModer, NotModer
-
+from .tasks import send_course_update_emails
 
 class CourseViewSet(viewsets.ModelViewSet):
     queryset = Course.objects.all()
@@ -22,6 +25,12 @@ class CourseViewSet(viewsets.ModelViewSet):
         elif self.action in ["create", "destroy"]:
             return [IsAuthenticated(), NotModer()]
         return [IsAuthenticated()]
+
+    def perform_update(self, serializer):
+        course = serializer.save()
+        if not course.updated_at or timezone.now() - course.updated_at > timedelta(hours=4):
+            send_course_update_emails.delay(course.id)
+
 
     @action(detail=True, methods=["post"], permission_classes=[IsAuthenticated])
     def subscribe(self, request, pk=None):
