@@ -10,6 +10,33 @@ jobs:
   build:
     runs-on: ubuntu-latest
 
+    services:
+      postgres:
+        image: postgres:15
+        env:
+          POSTGRES_USER: postgres
+          POSTGRES_PASSWORD: mypassword
+          POSTGRES_DB: mydb
+        options: >-
+          --health-cmd "pg_isready -U postgres"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      redis:
+        image: redis:7
+        options: >-
+          --health-cmd "redis-cli ping"
+          --health-interval 10s
+          --health-timeout 5s
+          --health-retries 5
+
+      env:
+        DATABASE_URL: postgres://postgres:mypassword@postgres:5432/mydb
+        REDIS_URL: redis://redis:6379
+        DJANGO_SETTINGS_MODULE: config.settings
+
+
     steps:
     - name: Check out code
       uses: actions/checkout@v3
